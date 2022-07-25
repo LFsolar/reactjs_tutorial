@@ -1,3 +1,5 @@
+// TODO: https://reactjs.org/tutorial/tutorial.html#showing-the-past-moves
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
