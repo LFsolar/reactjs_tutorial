@@ -2,34 +2,64 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-class Square extends React.Component {
+// refactored into function component
+// class Square extends React.Component {
+//     render() {
+//         return (
+//             // pass fxn to onClick
+//         <button 
+//             className="square" 
+//             // when square is clicked, do parent's onClick fxn
+//             onClick={() => this.props.onClick()}
+//         >
+//             {this.props.value}
+//         </button>
+//         );
+//     }
+// }
+
+// function component
+function Square(props) {
+    return (
+        <button 
+            className="square"
+            onClick={props.onClick}
+        >
+            {props.value}
+        </button>
+    )
+}
+
+// Board is parent of all squares
+class Board extends React.Component {
+    // board's state purpose: so child components can communicate
     constructor(props) {
         super(props);
         this.state = {
-            value: null
+            squares: Array(9).fill(null),
+            xIsNext: true,
         };
     }
 
-    render() {
-        return (
-            // pass fxn to onClick
-        <button 
-            className="square" 
-            onClick={() => this.setState({value: 'X'})}
-        >
-            {this.state.value}
-        </button>
-        );
+    handleClick(i) {
+        // slice to make copy of array, don't modify orig array
+        const squares = this.state.squares.slice();
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        this.setState({
+            squares: squares,
+            xIsNext: !this.state.xIsNext,
+        });
     }
-}
 
-class Board extends React.Component {
     renderSquare(i) {
-        return <Square value={i}/>;
+        // can use onClick when calling component, instead of putting onClick in Square class
+        return <Square 
+            value={this.state.squares[i]}
+            onClick={() => this.handleClick(i)}/>;
     }
 
     render() {
-        const status = 'Next player: X';
+        const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
         return (
         <div>
