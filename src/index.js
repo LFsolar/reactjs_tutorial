@@ -22,14 +22,28 @@ import './index.css';
 
 // function component
 function Square(props) {
-    return (
-        <button 
-            className="square"
-            onClick={props.onClick}
-        >
-            {props.value}
-        </button>
-    )
+    if (props.isSelected) {
+        return (
+            <button 
+                className="square"
+                onClick={props.onClick}
+            >
+                <span style={{fontWeight: 'bold', fontSize: '2rem', color: 'green'}}>{props.value}</span>
+                {/* {props.value} */}
+
+            </button>
+        )
+    } else {
+        return (
+            <button 
+                className="square"
+                onClick={props.onClick}
+            >
+                {props.value}
+
+            </button>
+        );
+    }
 }
 
 // Board is parent of all squares
@@ -59,11 +73,18 @@ class Board extends React.Component {
     //     });
     // }
 
-    renderSquare(i) {
+    renderSquare(i, isSelected) {
         // can use onClick when calling component, instead of putting onClick in Square class
         return <Square 
             value={this.props.squares[i]}
-            onClick={() => this.props.onClick(i)}/>;
+            isSelected = {isSelected}
+            onClick={() => this.props.onClick(i)}
+        />;
+    }
+
+    isSelected(index) {
+        console.log('index: ' + index + ', this.props.selected: ' + this.props.selected);
+        return index === this.props.selected;
     }
 
     render() {
@@ -79,19 +100,19 @@ class Board extends React.Component {
         return (
         <div>
             <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
+            {this.renderSquare(0, this.isSelected(0))}
+            {this.renderSquare(1, this.isSelected(1))}
+            {this.renderSquare(2, this.isSelected(2))}
             </div>
             <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
+            {this.renderSquare(3, this.isSelected(3))}
+            {this.renderSquare(4, this.isSelected(4))}
+            {this.renderSquare(5, this.isSelected(5))}
             </div>
             <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
+            {this.renderSquare(6, this.isSelected(6))}
+            {this.renderSquare(7, this.isSelected(7))}
+            {this.renderSquare(8, this.isSelected(8))}
             </div>
         </div>
         );
@@ -113,6 +134,7 @@ class Game extends React.Component {
                 x: null,
                 y: null,
             },
+            current: null,
         };
     }
 
@@ -137,6 +159,7 @@ class Game extends React.Component {
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
             location: this.getCoordinates(i),
+            current: i,
         });
     }
 
@@ -148,7 +171,7 @@ class Game extends React.Component {
     }
 
     getCoordinates(square) {
-        const x = (Math.floor(square / 3) + 1 );
+        const x = Math.floor(square / 3) + 1;
         const y = (square % 3) + 1;
         return {
             x: x, 
@@ -168,7 +191,6 @@ class Game extends React.Component {
             const desc = move ?
                 'Go to move #' + move :
                 'Go to game start';
-            console.log(this.state.location.x);
             return (
                 <li key={move}>
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -188,6 +210,7 @@ class Game extends React.Component {
             <div className="game-board">
             <Board
                 squares={current.squares}
+                selected={this.state.current}
                 onClick={(i) => this.handleClick(i)}
             />
             </div>
