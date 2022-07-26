@@ -109,6 +109,10 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             xIsNext: true,
+            location: {
+                x: null,
+                y: null,
+            },
         };
     }
 
@@ -124,6 +128,7 @@ class Game extends React.Component {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+        console.log('i: ' + i);
         this.setState({
             // push mutates array, so use concat here
             history: history.concat([{
@@ -131,6 +136,7 @@ class Game extends React.Component {
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
+            location: this.getCoordinates(i),
         });
     }
 
@@ -139,6 +145,15 @@ class Game extends React.Component {
             stepNumber: step,
             xIsNext: (step % 2) === 0,
         });
+    }
+
+    getCoordinates(square) {
+        const x = (Math.floor(square / 3) + 1 );
+        const y = (square % 3) + 1;
+        return {
+            x: x, 
+            y: y,
+        };
     }
 
     render() {
@@ -153,9 +168,11 @@ class Game extends React.Component {
             const desc = move ?
                 'Go to move #' + move :
                 'Go to game start';
+            console.log(this.state.location.x);
             return (
                 <li key={move}>
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <p>location: ({this.state.location.x}, {this.state.location.y})</p>
                 </li>
             );
         });
