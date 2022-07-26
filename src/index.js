@@ -1,4 +1,5 @@
-// TODO: https://reactjs.org/tutorial/tutorial.html#showing-the-past-moves
+// TODO: 3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
+// https://reactjs.org/tutorial/tutorial.html#wrapping-up
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
