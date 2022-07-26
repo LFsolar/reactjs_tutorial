@@ -88,6 +88,41 @@ class Board extends React.Component {
         return index === this.props.selected;
     }
 
+    drawBoard() {
+        const jsx = [];
+        jsx.push(<div>);
+        for (let i = 0; i < 9; i++) {
+            if ((i + 1) % 3 == 0) {jsx += `
+                    <div className="board-row">
+                `
+            }
+
+            if (i % 3 == 0) {jsx += `
+                    <div className="board-row">
+                `
+            }
+
+            jsx += `
+                {this.renderSquare(
+            `;
+
+            jsx += i;
+
+            jsx += `
+            , this.isSelected(
+            `;
+
+            jsx += i;
+
+            jsx += `
+                ))}
+            `;
+            
+        }
+        jsx += `</div>`
+        return jsx;
+    }
+
     render() {
         // lifted up to Game
         // const winner = calculateWinner(this.state.squares);
@@ -97,6 +132,8 @@ class Board extends React.Component {
         // } else {
         //     status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         // }
+        let board = this.drawBoard();
+        return board;
 
         return (
         <div>
